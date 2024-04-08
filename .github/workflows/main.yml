@@ -1,0 +1,30 @@
+name: Deploy 
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Deploy files via SFTP
+        uses: pressidium/lftp-mirror-action@v1
+        with:
+          host: 103.169.160.66
+          port: 21
+          user: dipcb_ftp_deploy@dipchakraborty.com
+          pass: deployNEW*921
+          localDir: '.'
+          remoteDir: '/public_html/expanse_manager/'
+          reverse: true
+          onlyNewer: true
+          settings: 'sftp:auto-confirm=yes'
+          ignoreFile: '.lftp_ignore'
+          options: '--verbose'
